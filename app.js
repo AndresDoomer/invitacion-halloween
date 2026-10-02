@@ -194,43 +194,68 @@ function initQuestion() {
       }).catch(() => {}); // silencioso, no importa si falla
     }
 
-    // Después del primer click, activar escape por hover/touch también
+    // Al primer intento, convertir inmediatamente a posición fija para no alterar el layout
     if (!noActivated) {
       noActivated = true;
+      const initialRect = btnNo.getBoundingClientRect();
+      btnNo.style.width = `${initialRect.width}px`;
+      btnNo.style.position = 'fixed';
+      btnNo.style.left = `${initialRect.left}px`;
+      btnNo.style.top = `${initialRect.top}px`;
+      btnNo.style.margin = '0';
+      btnNo.style.zIndex = '999';
+
       btnNo.addEventListener('pointerenter', escapeNo);
       btnNo.addEventListener('touchstart', escapeNo, { passive: false });
     }
 
-    // Calcular nueva posición dentro del viewport
+    // Dimensiones de la ventana visible
     const vw = window.innerWidth;
     const vh = window.innerHeight;
-    const btnW = btnNo.offsetWidth;
-    const btnH = btnNo.offsetHeight;
-    const margin = 20;
+    const btnW = btnNo.offsetWidth || 100;
+    const btnH = btnNo.offsetHeight || 48;
 
+    // Márgenes seguros para que NUNCA toque los bordes ni las barras de navegación del móvil
+    const padX = 20;
+    const minY = Math.max(90, Math.floor(vh * 0.14)); // debajo del mini-player
+    const maxY = Math.min(vh - btnH - 65, Math.floor(vh * 0.80)); // bien arriba del borde inferior
+
+    const minX = padX;
+    const maxX = Math.max(minX, vw - btnW - padX);
+
+    // Evitar caer justo encima del botón Sí
+    const yesRect = btnYes.getBoundingClientRect();
     let newX, newY;
-    // En las primeras escapadas, se queda dentro del arena; después vuela por toda la pantalla
-    if (escapeCount <= 2) {
-      const arenaRect = arena.getBoundingClientRect();
-      newX = arenaRect.left + Math.random() * (arenaRect.width - btnW);
-      newY = arenaRect.top + Math.random() * (arenaRect.height - btnH);
-    } else {
-      // Cambiar a posición fija para que vuele por toda la pantalla
-      btnNo.style.position = 'fixed';
-      btnNo.style.zIndex = '100';
-      newX = margin + Math.random() * (vw - btnW - margin * 2);
-      newY = margin + Math.random() * (vh - btnH - margin * 2);
-    }
+    let attempts = 0;
+
+    do {
+      newX = minX + Math.random() * (maxX - minX);
+      newY = minY + Math.random() * (maxY - minY);
+      attempts++;
+
+      const overlapsYes = !(
+        newX + btnW < yesRect.left - 16 ||
+        newX > yesRect.right + 16 ||
+        newY + btnH < yesRect.top - 16 ||
+        newY > yesRect.bottom + 16
+      );
+
+      if (!overlapsYes || attempts > 12) break;
+    } while (attempts < 12);
+
+    // Asegurar 100% que quede dentro de los límites estrictos
+    newX = Math.max(minX, Math.min(newX, maxX));
+    newY = Math.max(minY, Math.min(newY, maxY));
 
     gsap.to(btnNo, {
       left: newX,
       top: newY,
-      duration: 0.2,
-      ease: 'power4.out',
+      duration: 0.22,
+      ease: 'power3.out',
     });
 
     // El botón SÍ crece un poco con cada intento
-    const newScale = Math.min(1 + escapeCount * 0.08, 1.6);
+    const newScale = Math.min(1 + escapeCount * 0.08, 1.5);
     gsap.to(btnYes, {
       scale: newScale,
       duration: 0.35,
@@ -245,8 +270,8 @@ function initQuestion() {
     // Después de muchos intentos, el botón No se hace chiquito y desaparece
     if (escapeCount >= 6) {
       gsap.to(btnNo, {
-        scale: 0.5,
-        opacity: 0.4,
+        scale: 0.55,
+        opacity: 0.45,
         duration: 0.3,
       });
     }
@@ -254,17 +279,21 @@ function initQuestion() {
       gsap.to(btnNo, {
         scale: 0,
         opacity: 0,
-        duration: 0.3,
-        onComplete: () => { btnNo.style.pointerEvents = 'none'; },
+        duration: 0.25,
+        onComplete: () => {
+          btnNo.style.display = 'none';
+        },
       });
     }
   }
 
-  // Solo click al principio — no se mueve con hover hasta que intente darle
+  // Click inicial
   btnNo.addEventListener('click', escapeNo);
 
   // ---------- Botón SÍ ----------
   btnYes.addEventListener('click', () => {
+    btnNo.style.display = 'none';
+
     // Confeti sutil (colores cálidos, no exagerado)
     const defaults = {
       spread: 55,

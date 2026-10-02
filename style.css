@@ -402,6 +402,12 @@ fieldset {
 /* =============================================
    PANTALLA 2 — QUESTION
    ============================================= */
+#screen-question {
+  overflow: hidden;
+  position: relative;
+  max-height: 100dvh;
+}
+
 .mini-player {
   display: flex;
   align-items: center;
