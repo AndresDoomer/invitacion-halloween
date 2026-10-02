@@ -10,7 +10,7 @@ const CONFIG = {
 
   // YouTube
   videoId: 'SGj-ORoxD8U',   // Cherry Waves - Deftones (Versión oficial de estudio)
-  startAt: 0,               // Arranca desde el inicio con la intro de guitarra
+  startAt: 55,              // 0:55 - justo en el redoble y arranque del coro más icónico
 };
 
 /* =============================================
