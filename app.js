@@ -333,11 +333,15 @@ function initForm() {
         },
       });
 
-      // Configurar link de WhatsApp
-      const waText = encodeURIComponent(
-        `Hola! Ya confirmé en tu invitación:\n• Plan: ${plan}\n• Día: ${day}\n• Nota: ${note}`
-      );
-      btnWA.href = `https://wa.me/${CONFIG.whatsappNumber}?text=${waText}`;
+      // Configurar link de WhatsApp si existe número
+      if (CONFIG.whatsappNumber && CONFIG.whatsappNumber !== 'TU_NUMERO_AQUI') {
+        const waText = encodeURIComponent(
+          `Hola! Ya confirmé en tu invitación:\n• Plan: ${plan}\n• Día: ${day}\n• Nota: ${note}`
+        );
+        btnWA.href = `https://wa.me/${CONFIG.whatsappNumber}?text=${waText}`;
+      } else {
+        btnWA.style.display = 'none';
+      }
 
     } catch (err) {
       console.error(err);
