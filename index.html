@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>🎃 Para Daniela</title>
+  <meta name="theme-color" content="#0a0a0b">
+  <meta name="description" content="Algo para ti.">
+
+  <!-- Fuentes -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Textura cinematográfica -->
+  <div class="grain" aria-hidden="true"></div>
+  <div class="glow glow--cherry" aria-hidden="true"></div>
+  <div class="glow glow--amber" aria-hidden="true"></div>
+
+  <!-- YouTube Player (oculto) -->
+  <div id="yt-wrap" aria-hidden="true"></div>
+
+  <div class="app">
+
+    <!-- ==========================================
+         PANTALLA 1 — INTRO / PLAY
+         ========================================== -->
+    <section id="screen-intro" class="screen active">
+
+      <div class="turntable">
+        <div class="disc" id="disc">
+          <div class="disc__groove"></div>
+          <div class="disc__groove"></div>
+          <div class="disc__groove"></div>
+          <div class="disc__label">
+            <span class="disc__artist">Deftones</span>
+            <span class="disc__track">Cherry Waves</span>
+          </div>
+        </div>
+        <div class="arm" id="arm">
+          <div class="arm__pivot"></div>
+          <div class="arm__bar"></div>
+          <div class="arm__head"></div>
+        </div>
+      </div>
+
+      <h1 class="intro__name">Daniela</h1>
+      <p class="intro__line">Dale play, hay una propuesta para ti.</p>
+
+      <button id="btn-play" class="btn btn--primary">
+        <i data-lucide="play" class="btn__icon"></i>
+        <span>Escuchar</span>
+      </button>
+    </section>
+
+    <!-- ==========================================
+         PANTALLA 2 — LA PREGUNTA
+         ========================================== -->
+    <section id="screen-question" class="screen">
+
+      <!-- Mini-player flotante -->
+      <div id="mini-player" class="mini-player">
+        <div class="eq">
+          <span class="eq__bar"></span>
+          <span class="eq__bar"></span>
+          <span class="eq__bar"></span>
+          <span class="eq__bar"></span>
+        </div>
+        <span class="mini-player__info">Cherry Waves · Deftones</span>
+        <button id="btn-mute" class="mini-player__mute" aria-label="Silenciar">
+          <i data-lucide="volume-2" id="icon-vol"></i>
+        </button>
+      </div>
+
+      <div class="question-body">
+        <h2 class="question__title">¿Saldrías conmigo en Halloween?</h2>
+        <p class="question__sub" id="escape-msg"></p>
+
+        <div class="choices" id="arena">
+          <button id="btn-yes" class="btn btn--yes">
+            <span>Dale, vamos</span>
+          </button>
+          <button id="btn-no" class="btn btn--no" aria-label="No">
+            <span id="no-label">No</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         PANTALLA 3 — EL PLAN
+         ========================================== -->
+    <section id="screen-plan" class="screen">
+
+      <div id="form-view">
+        <h2 class="plan__title">Dime cómo lo armamos:</h2>
+
+        <form id="the-form" class="form" autocomplete="off">
+
+          <!-- Día -->
+          <fieldset class="field">
+            <legend class="field__label">¿Cuándo?</legend>
+            <div class="chips">
+              <label class="chip">
+                <input type="radio" name="day" value="Noche de Halloween (31 oct)" checked>
+                <span class="chip__ui">🎃 31 de octubre</span>
+              </label>
+              <label class="chip">
+                <input type="radio" name="day" value="El fin de semana antes">
+                <span class="chip__ui">Fin de semana antes</span>
+              </label>
+              <label class="chip">
+                <input type="radio" name="day" value="El fin de semana después">
+                <span class="chip__ui">Fin de semana después</span>
+              </label>
+              <label class="chip">
+                <input type="radio" name="day" value="Otro día">
+                <span class="chip__ui">Otro día</span>
+              </label>
+            </div>
+          </fieldset>
+
+          <!-- Nota -->
+          <div class="field">
+            <label class="field__label" for="note">¿Algo más? <span class="field__opt">(opcional)</span></label>
+            <textarea id="note" name="note" rows="2" class="textarea" placeholder="Ideas de disfraz, algo que quieras decirme..."></textarea>
+          </div>
+
+          <button type="submit" id="btn-send" class="btn btn--primary btn--full">
+            <span>Listo, enviar</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- Éxito -->
+      <div id="success-view" class="success hidden">
+        <div class="success__icon-wrap">
+          <i data-lucide="check-circle-2" class="success__icon"></i>
+        </div>
+        <h3 class="success__title">Listo, este Halloween va a estar increíble</h3>
+        <p class="success__text">Nos vemos pronto 🖤</p>
+        <a id="btn-wa" href="#" target="_blank" class="btn btn--wa">
+          <i data-lucide="message-circle" class="btn__icon"></i>
+          <span>Avisarme por WhatsApp también</span>
+        </a>
+      </div>
+    </section>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
