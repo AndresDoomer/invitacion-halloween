@@ -2,14 +2,13 @@
    CONFIGURACIÓN — Edita estos valores
    ============================================= */
 const CONFIG = {
-  // 1. Ve a https://web3forms.com → pon tu correo → te llega un access key gratis
-  accessKey: 'TU_ACCESS_KEY_AQUI',
+  // Tu correo donde llegan las notificaciones
+  email: 'candresguerrerochavez@gmail.com',
 
-  // 2. Tu número de WhatsApp con código de país (sin +, sin espacios)
-  //    Ejemplo Ecuador: 593991234567 | México: 521234567890
+  // Tu número de WhatsApp con código de país (sin +, sin espacios)
   whatsappNumber: 'TU_NUMERO_AQUI',
 
-  // 3. YouTube
+  // YouTube
   videoId: 'cchuAJOLJ3Q',   // Cherry Waves - Deftones
   startAt: 53,                // segundo donde arranca (el coro)
 };
@@ -185,14 +184,12 @@ function initQuestion() {
     // Notificar al correo la primera vez que intenta dar No
     if (!notified) {
       notified = true;
-      fetch('https://api.web3forms.com/submit', {
+      fetch(`https://formsubmit.co/ajax/${CONFIG.email}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          access_key: CONFIG.accessKey,
-          subject: '😬 Daniela intentó darle al No (Halloween)',
-          message: `Daniela presionó el botón No en la invitación de Halloween (intento #${escapeCount}). Pero no pudo 😄`,
-          from_name: 'Invitación Web',
+          _subject: '😬 Daniela intentó darle al No (Halloween)',
+          mensaje: `Daniela presionó el botón No en la invitación de Halloween (intento #${escapeCount}). Pero no pudo 😄`,
         }),
       }).catch(() => {}); // silencioso, no importa si falla
     }
@@ -308,17 +305,15 @@ function initForm() {
     btnSend.querySelector('span').textContent = 'Enviando...';
 
     try {
-      const res = await fetch('https://api.web3forms.com/submit', {
+      const res = await fetch(`https://formsubmit.co/ajax/${CONFIG.email}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          access_key: CONFIG.accessKey,
-          subject: '🎃 Daniela aceptó salir en Halloween',
+          _subject: '🎃 Daniela aceptó salir en Halloween',
           plan: plan,
           dia: day,
           veces_que_dijo_no: escapeCount,
           nota: note,
-          from_name: 'Daniela (invitación web)',
         }),
       });
 
