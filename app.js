@@ -9,8 +9,8 @@ const CONFIG = {
   whatsappNumber: 'TU_NUMERO_AQUI',
 
   // YouTube
-  videoId: 'cchuAJOLJ3Q',   // Cherry Waves - Deftones
-  startAt: 53,                // segundo donde arranca (el coro)
+  videoId: 'SGj-ORoxD8U',   // Cherry Waves - Deftones (Versión oficial de estudio)
+  startAt: 0,               // Arranca desde el inicio con la intro de guitarra
 };
 
 /* =============================================
